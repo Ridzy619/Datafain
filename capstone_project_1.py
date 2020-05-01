@@ -107,4 +107,4 @@ def process_result(names, subjects, tests, exams, file = sys.stdout):
   # Print out a formatted ouput of report
   pprint(names, student_scores, file)
 
-
+print("Import completed! You are ready to execute your project")
