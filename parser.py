@@ -71,5 +71,34 @@ def generate_data(n_students = number_of_students, subjects = None):
       file.write("\n")
   print(f"File generation completed! It has {n_students} students records and {m} subjects.\nThe file has has been saved as 'students_records.txt'")
 
+def check_parser(parse_file, file_name = 'students_records.txt', parse = checker.parse):
+  result = parse_file(file_name)
+  actual = parse(file_name)
+  var_names = ['students,', 'subjects,', 'test_scores,', 'exam_scores,', 'ages,', 'class_']
+  assert len(result) == len(actual), f"Number of outputs expected is {len(actual)}, number of outputs gotten is {len(result)}"
+
+  for i, j, name in zip(result, actual, var_names):
+    if type(j) == list:
+      assert not set(i).isdisjoint(b), f"You need to review {name}. There is no matching item to the expected items"
+      assert set(j).issubset(set(i)) or set(i).issubset(set(j)), f"Items in {name} don't match the expted items. Difference is: {set(i).interset(set(j))}"
+      assert len(i) <= len(j), f"There is a partial match. {set(i).difference(set(j))} are not supposed to be in {name}"
+      assert len(i) >= len(j), f"There is a partial match. {set(j).difference(set(i))} are not found in {name}"
+      assert i == j, "You are almost there. Just a little more adjustment and you will be there"
+      
+      
+      # for k, (m, n) in enumerate(zip(i, j)):
+      #   if type(j) == list:
+      #     assert not set(i).isdisjoint(b), f"You need to review {name}. The sub"
+      #     assert set(j).issubset(set(i)) or set(i).issubset(set(j)), f"Items in {name} don't match the expted items. Difference is: {set(i).interset(set(j))}"
+      #     assert len(i) <= len(j), f"There is a partial match. {set(i).difference(set(j))} are not supposed to be in {name}"
+      #     assert len(i) >= len(j), f"There is a partial match. {set(j).difference(set(i))} are not found in {name}"
+      #     assert i == j: "You are almost there. Just a little more adjustment and you will be there"
+
+      #     assert j in i or i in j, f"String {j} expected, {i} gotten."
+      #     assert len(i) == len(j), f"There is a partial match. {j} expected, {i} gotten."
+      #   if j.isdigit():
+      #     assert j == i, f"Number {j} expected, {i} gotten"
+  print("CONGRTULATIONS! You have passed all the checks. You may proceed to run the other cells to complete the program")
+
 if __name__ == "__main__":
     generate_data(number_of_students)
