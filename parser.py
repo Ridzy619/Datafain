@@ -1,3 +1,5 @@
+import time
+start_time = time.time()
 def parse(file):
   with open(file, 'r') as f:
       # Read first line containing headers and split it at ',' into a list
@@ -18,8 +20,8 @@ def parse(file):
           stud_fullname = line[0] + line[1] # Get student's full name
           students.append(stud_fullname) # Append to the list of students' names
 
-          stud_age = int(line[2]) # Get student's age
-          ages.append(stud_age.strip()) # Append to students' ages list
+          stud_age = int(line[2].strip()) # Get student's age
+          ages.append(stud_age) # Append to students' ages list
 
           tests = line[4::2] #  Get all test scores for student
           tests = list(map(int, tests))
@@ -35,8 +37,8 @@ def parse(file):
 
 ## GENERATE DATA OF STUDENTS
 
-number_of_students = 10
-def generate_data(n_students = number_of_students, subjects = None):
+# number_of_students = 10
+def generate_data(n_students = 10, subjects = None):
   import requests
   import numpy as np
   
@@ -160,7 +162,8 @@ def stud_scores(subjects, total_scores):
   return stud_scores
 
 import sys
-def pprint(names, stud_scores, file): # file argument allows us to specify the file we want out output written to
+def pprint(names, stud_scores, file, ages): # file argument allows us to specify the file we want out output written to
+  file = open(file, 'w')
   
   # Create a variable for total calss average that gets update with the average score of each student at the loop below executes
   class_average_sum = 0
@@ -172,38 +175,43 @@ def pprint(names, stud_scores, file): # file argument allows us to specify the f
     stud_scores_sum = 0
 
     # Print the student's name
-    print(name)
+    print(name, file=file)
 
     # Print the headings and format it with appropriate spacing
-    print(f'{"Subject":>20}:  |{"Score":<6}  |{"Grade"}')
-    print("_" * 40) # Just a dash line
+    print(f'{"Subject":>20}:  |{"Score":<6}  |{"Grade"}', file=file)
+    print("_" * 40, file = file) # Just a dash line
 
     # Loop through each (subject, score) tuple pair in the list sub_scores and print each subject and corresponding score.
     for subject, score in sub_scores:
 
       # Print and format the subjects, score and grade of each subject
-      print(f'{subject:>20}:  |{score:<6}  |{grader(score)}')
+      print(f'{subject:>20}:  |{score:<6.2f}  |{grader(score)}', file=file)
 
       # Adding each subject's score to the stud_average variable
       stud_scores_sum += score
     # Calculate the mean score
     average = stud_scores_sum/ len(sub_scores)
-    print()
-    print(f'{"Average":>20}:  |{average:<6}  |{grader(average)}')
-    print("\n", "+" * 40, end = '\n'*2)
+    print(f'\n{"Average":>20}:  |{average:<6.2f}  |{grader(average)}', file=file)
+    print("\n", "+" * 40, end = '\n'*2, file=file)
 
     # Add average of each student to the class_average_sum
     class_average_sum += average
   
   # Calculate the class mean
   class_average = class_average_sum/len(names)
-  print(f'{"Average Class":>20}\n{"Performance:":>20}  |{class_average: <6}   |{grader(class_average)}')
+  av_age = sum(ages)/len(ages)
+  print('Class Performance Summary'.center(40, '>'), file=file)
+  print("\n", "+" * 40, end = '\n'*2, file=file)
+  print(f'{"Number of Students":>20}\n{"in Class":>20}   |{len(ages): <6}', file=file)
+  print(f'{"Average Class":>20}\n{"Age:":>20}   |{av_age: <6.2f}', file=file)
+  print(f'{"Average Class":>20}\n{"Performance:":>20}   |{class_average: <6.2f}   |{grader(class_average)}', file=file)
+  file.close()
 
 
 
 
-def process_result(file_path, file = sys.stdout):
-  students, subjects, test_scores, exam_scores, ages = parser(file_path)
+def process_result(file_path = "students_records.txt", file = 'Project_output.txt'):
+  names, subjects, test_scores, exam_scores, ages, class_ = parse(file_path)
   # Get total scores of tests and exams
   total_scores = total(test_scores, exam_scores)
 
@@ -211,10 +219,22 @@ def process_result(file_path, file = sys.stdout):
   student_scores = stud_scores(subjects, total_scores)
 
   # Print out a formatted ouput of report
-  pprint(names, student_scores, file)
+  pprint(names, student_scores, file, ages)
+  print(f"Program done running. Output has been saved as {file}")
 
 print("Import completed! You are ready to execute your project")
 
 
 if __name__ == "__main__":
-    generate_data(number_of_students)
+    import sys
+    try:
+        arg = sys.argv[1]
+        if arg.isdigit():
+            generate_data(int(arg))
+            process_result()
+        else:
+            process_result(arg)
+    except IndexError:
+        generate_data()
+        process_result()
+    print(f"Total runtime: {(time.time() - start_time):.2f} seconds")
