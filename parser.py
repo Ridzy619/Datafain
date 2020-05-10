@@ -34,7 +34,7 @@ def parse(file):
 ## GENERATE DATA OF STUDENTS
 
 number_of_students = 10
-def generate_data(n_students, subjects = None):
+def generate_data(n_students = number_of_students, subjects = None):
   import requests
   import numpy as np
   
