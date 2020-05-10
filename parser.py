@@ -73,7 +73,7 @@ def generate_data(n_students = number_of_students, subjects = None):
       file.write("\n")
   print(f"File generation completed! It has {n_students} students records and {m} subjects.\nThe file has has been saved as 'students_records.txt'")
 
-def check_parser(parse_file, file_name = 'students_records.txt', parse = checker.parse):
+def check_parser(parse_file, file_name = 'students_records.txt', parse = parse):
   result = parse_file(file_name)
   actual = parse(file_name)
   var_names = ['students,', 'subjects,', 'test_scores,', 'exam_scores,', 'ages,', 'class_']
