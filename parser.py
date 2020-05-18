@@ -84,7 +84,7 @@ def check_parser(parse_file, file_name = 'students_records.txt', parse = parse):
   for i, j, name in zip(result, actual, var_names):
     if type(j) == list:
       assert not set(i).isdisjoint(j), f"You need to review {name}. There is no matching item to the expected items"
-      assert set(j).issubset(set(i)) or set(i).issubset(set(j)), f"Items in {name} don't match the expted items. Difference is: {set(i).interset(set(j))}"
+      assert set(j).issubset(set(i)) or set(i).issubset(set(j)), f"Items in {name} don't match the expted items. Difference is: {set(i).intersect(set(j))}"
       assert len(i) <= len(j), f"There is a partial match. {set(i).difference(set(j))} are not supposed to be in {name}"
       assert len(i) >= len(j), f"There is a partial match. {set(j).difference(set(i))} are not found in {name}"
       assert i == j, "You are almost there. Just a little more adjustment and you will be there"
